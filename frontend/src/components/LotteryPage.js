@@ -137,11 +137,22 @@ const LotteryPage = () => {
       return;
     }
 
+    const currentDraw = drawsSchedule.find(draw => draw.id === selectedDraw);
+    if (!currentDraw) {
+      showAlert('error', 'Please select a valid draw');
+      return;
+    }
+
+    if (currentDraw.status === 'Closed') {
+      showAlert('error', 'This draw is closed. Please select another draw.');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const ticketData = {
         game_type: selectedGameType,
-        location: selectedLocation,
+        location: currentDraw.location,
         numbers: selectedNumbers,
         bet_amount: betAmount
       };
