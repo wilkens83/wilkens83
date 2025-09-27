@@ -11,11 +11,11 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const LotteryPage = () => {
-  const [selectedLocation, setSelectedLocation] = useState('NY');
-  const [selectedGameType, setSelectedGameType] = useState('lotto3');
+  const [selectedDraw, setSelectedDraw] = useState('ny_midday');
+  const [selectedGameType, setSelectedGameType] = useState('loto3');
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [betAmount, setBetAmount] = useState(5.00);
-  const [locations, setLocations] = useState([]);
+  const [drawsSchedule, setDrawsSchedule] = useState([]);
   const [gameTypes, setGameTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState(null);
