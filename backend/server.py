@@ -208,27 +208,136 @@ async def get_latest_draw(game_type: str, location: str):
         return {"message": "No draws found"}
     return DrawResult(**draw)
 
-@api_router.get("/lottery/locations")
-async def get_locations():
-    """Get available lottery locations"""
-    return {
-        "locations": [
-            {"code": "NY", "name": "New York (NY)"},
-            {"code": "FL", "name": "Florida (FL)"},
-            {"code": "CA", "name": "California (CA)"},
-            {"code": "TX", "name": "Texas (TX)"}
-        ]
-    }
+@api_router.get("/lottery/draws-schedule")
+async def get_draws_schedule():
+    """Get available draws with schedule and status"""
+    from datetime import datetime, time
+    import pytz
+    
+    # Get current time in EST
+    est = pytz.timezone('US/Eastern')
+    current_time = datetime.now(est).time()
+    
+    def get_draw_status(draw_time_str):
+        """Determine if draw is Open, Closed, or In Progress"""
+        draw_time = datetime.strptime(draw_time_str, "%H:%M").time()
+        
+        # Create time ranges for "In Progress" (15 minutes before to 15 minutes after)
+        import datetime as dt
+        draw_datetime = dt.datetime.combine(dt.date.today(), draw_time)
+        start_progress = (draw_datetime - dt.timedelta(minutes=15)).time()
+        end_progress = (draw_datetime + dt.timedelta(minutes=15)).time()
+        
+        if start_progress <= current_time <= end_progress:
+            return "In Progress"
+        elif current_time < draw_time:
+            return "Open"
+        else:
+            return "Closed"
+    
+    draws = [
+        {
+            "id": "ny_midday",
+            "name": "New York Midday",
+            "location": "NY",
+            "time": "12:00",
+            "status": get_draw_status("12:00"),
+            "timezone": "EST"
+        },
+        {
+            "id": "ny_evening", 
+            "name": "New York Evening",
+            "location": "NY",
+            "time": "19:00",
+            "status": get_draw_status("19:00"),
+            "timezone": "EST"
+        },
+        {
+            "id": "fl_midday",
+            "name": "Florida Midday", 
+            "location": "FL",
+            "time": "12:30",
+            "status": get_draw_status("12:30"),
+            "timezone": "EST"
+        },
+        {
+            "id": "fl_evening",
+            "name": "Florida Evening",
+            "location": "FL", 
+            "time": "19:30",
+            "status": get_draw_status("19:30"),
+            "timezone": "EST"
+        },
+        {
+            "id": "ct_daily",
+            "name": "Connecticut",
+            "location": "CT",
+            "time": "18:45",
+            "status": get_draw_status("18:45"),
+            "timezone": "EST"
+        },
+        {
+            "id": "ar_daily",
+            "name": "Arkansas", 
+            "location": "AR",
+            "time": "20:00",
+            "status": get_draw_status("20:00"),
+            "timezone": "CST"
+        }
+    ]
+    
+    return {"draws": draws}
 
 @api_router.get("/lottery/game-types")
 async def get_game_types():
-    """Get available game types"""
+    """Get available game types with payouts"""
     return {
         "game_types": [
-            {"id": "lotto3", "name": "Lotto 3", "numbers_required": 3},
-            {"id": "lotto4", "name": "Lotto 4", "numbers_required": 4},
-            {"id": "lotto5", "name": "Lotto 5", "numbers_required": 5},
-            {"id": "maryaj", "name": "Maryaj", "numbers_required": 2}
+            {
+                "id": "loto2", 
+                "name": "Loto 2 Digits",
+                "description": "Classic borlette 00–99",
+                "numbers_required": 2,
+                "number_range": "00-99",
+                "payout": "x50",
+                "color": "bg-red-500"
+            },
+            {
+                "id": "loto3", 
+                "name": "Loto 3 Digits", 
+                "description": "000–999",
+                "numbers_required": 3,
+                "number_range": "000-999", 
+                "payout": "x500",
+                "color": "bg-blue-500"
+            },
+            {
+                "id": "loto4", 
+                "name": "Loto 4 Digits",
+                "description": "0000–9999", 
+                "numbers_required": 4,
+                "number_range": "0000-9999",
+                "payout": "x5000", 
+                "color": "bg-green-500"
+            },
+            {
+                "id": "loto5", 
+                "name": "Loto 5 Digits",
+                "description": "00000–99999",
+                "numbers_required": 5, 
+                "number_range": "00000-99999",
+                "payout": "x50000",
+                "color": "bg-purple-500"
+            },
+            {
+                "id": "mariage", 
+                "name": "Mariage",
+                "description": "Combination of 2 numbers", 
+                "numbers_required": 2,
+                "number_range": "00-99 pairs",
+                "payout": "x25",
+                "color": "bg-pink-500"
+            }
         ]
     }
 
