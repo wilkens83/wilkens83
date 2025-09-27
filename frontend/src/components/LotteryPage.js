@@ -61,9 +61,12 @@ const LotteryPage = () => {
 
   const fetchLatestDraw = async () => {
     try {
-      const response = await axios.get(`${API}/lottery/draws/${selectedGameType}/${selectedLocation}`);
-      if (response.data.id) {
-        setLatestDraw(response.data);
+      const currentDraw = drawsSchedule.find(draw => draw.id === selectedDraw);
+      if (currentDraw) {
+        const response = await axios.get(`${API}/lottery/draws/${selectedGameType}/${currentDraw.location}`);
+        if (response.data.id) {
+          setLatestDraw(response.data);
+        }
       }
     } catch (error) {
       console.error('Error fetching latest draw:', error);
