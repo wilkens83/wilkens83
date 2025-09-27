@@ -401,7 +401,10 @@ const LotteryPage = () => {
               </Button>
             </div>
             
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className={`grid gap-3 mb-4 ${
+              getRequiredNumbers() <= 3 ? 'grid-cols-3' : 
+              getRequiredNumbers() === 4 ? 'grid-cols-4' : 'grid-cols-5'
+            }`}>
               {Array.from({ length: getRequiredNumbers() }).map((_, index) => (
                 <div
                   key={index}
