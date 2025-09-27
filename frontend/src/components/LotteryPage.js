@@ -23,21 +23,21 @@ const LotteryPage = () => {
   const [latestDraw, setLatestDraw] = useState(null);
 
   useEffect(() => {
-    fetchLocations();
+    fetchDrawsSchedule();
     fetchGameTypes();
     fetchTickets();
   }, []);
 
   useEffect(() => {
     fetchLatestDraw();
-  }, [selectedGameType, selectedLocation]);
+  }, [selectedGameType, selectedDraw]);
 
-  const fetchLocations = async () => {
+  const fetchDrawsSchedule = async () => {
     try {
-      const response = await axios.get(`${API}/lottery/locations`);
-      setLocations(response.data.locations);
+      const response = await axios.get(`${API}/lottery/draws-schedule`);
+      setDrawsSchedule(response.data.draws);
     } catch (error) {
-      console.error('Error fetching locations:', error);
+      console.error('Error fetching draws schedule:', error);
     }
   };
 
