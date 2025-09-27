@@ -448,10 +448,27 @@ const LotteryPage = () => {
             </div>
           </div>
 
+          {/* Draw Status Warning */}
+          {drawsSchedule.find(draw => draw.id === selectedDraw)?.status === 'Closed' && (
+            <div className="mb-4 p-3 bg-red-900/30 border border-red-500 rounded-xl">
+              <div className="text-red-400 text-sm font-semibold">
+                ⚠️ This draw is closed. Please select another draw.
+              </div>
+            </div>
+          )}
+
+          {drawsSchedule.find(draw => draw.id === selectedDraw)?.status === 'In Progress' && (
+            <div className="mb-4 p-3 bg-yellow-900/30 border border-yellow-500 rounded-xl">
+              <div className="text-yellow-400 text-sm font-semibold">
+                🔄 Draw in progress. Last chance to play!
+              </div>
+            </div>
+          )}
+
           {/* Play Button */}
           <Button
             onClick={handlePlayNow}
-            disabled={isLoading || selectedNumbers.length !== getRequiredNumbers()}
+            disabled={isLoading || selectedNumbers.length !== getRequiredNumbers() || drawsSchedule.find(draw => draw.id === selectedDraw)?.status === 'Closed'}
             className="play-button w-full h-14 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black text-lg font-bold rounded-2xl disabled:opacity-50"
             data-testid="play-now-btn"
           >
