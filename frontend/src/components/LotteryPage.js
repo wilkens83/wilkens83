@@ -380,38 +380,11 @@ const LotteryPage = () => {
             </Alert>
           )}
 
-          {/* Location Selection */}
-          <div className="mb-6">
-            <label className="block text-sm text-gray-300 mb-2">Chwazi Tiraj / Select Draw</label>
-            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-white" data-testid="location-selector">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {locations.map(location => (
-                  <SelectItem key={location.code} value={location.code} className="text-white">
-                    {location.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Draw Selection Carousel */}
+          {renderDrawCarousel()}
 
-          {/* Game Type Tabs */}
-          <Tabs value={selectedGameType} onValueChange={setSelectedGameType} className="mb-6">
-            <TabsList className="grid w-full grid-cols-4 bg-slate-700">
-              {gameTypes.map(gameType => (
-                <TabsTrigger 
-                  key={gameType.id} 
-                  value={gameType.id}
-                  className="data-[state=active]:bg-blue-600 text-white"
-                  data-testid={`game-type-${gameType.id}`}
-                >
-                  {gameType.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+          {/* Game Type Buttons */}
+          {renderGameTypeButtons()}
 
           {/* Selected Numbers Display */}
           <div className="mb-6">
